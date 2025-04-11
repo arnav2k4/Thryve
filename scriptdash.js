@@ -62,8 +62,11 @@ function nextPage() {
     .then(response => response.json())
     .then(result => {
         if (result.message) {
-            alert(result.message);
-            window.location.href = 'success.html';
+            // Store the employee ID for the success page
+            localStorage.setItem('lastSubmittedEmpId', empID);
+            
+            // Redirect with the employee ID in the URL
+            window.location.href = `success.html?empId=${empID}`;
         } else if (result.error) {
             alert(`Error: ${result.error}`);
             console.error('Server error details:', result.details);
@@ -75,51 +78,4 @@ function nextPage() {
     });
 }
 
-
-function loginUser(event) {
-    event.preventDefault(); // Prevent default form submission
-
-    const username = document.getElementById('login-username').value;
-    const password = document.getElementById('login-password').value;
-
-    fetch('http://localhost:3000/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message === 'Login successful') {
-            alert('Login successful!');
-            console.log('Redirecting to dashboard...');
-
-            // ✅ Store username in Local Storage
-            localStorage.setItem("usern", document.getElementById('login-username').value);
-
-            setTimeout(() => {
-                window.location.href = 'indexdash.html'; // Redirect after 1 sec
-            }, 10);
-        } else {
-            alert('Error: ' + (data.error || 'Login failed.'));
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error logging in. Please try again.');
-    });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    const usernameInput = document.getElementById('username');
-
-    // ✅ Get username from Local Storage
-    const ab = localStorage.getItem("usern");
-
-    if (ab) {
-        usernameInput.value = ab;
-    } else {
-        usernameInput.value = 'User not found';
-    }
-});
+// Modify the nextPage() function's success handler

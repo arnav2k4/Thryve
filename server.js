@@ -90,6 +90,49 @@ app.post('/employee-data', (req, res) => {
     });
 });
 
+// Add these at the top of server.js
+const { exec } = require('child_process');
+const util = require('util');
+const execPromise = util.promisify(exec);
+
+// Add this new endpoint
+app.get('/employee-risk/:empId', async (req, res) => {
+    try {
+        const empId = req.params.empId;
+        
+        // Execute the Python script with the employee ID
+        const { stdout, stderr } = await execPromise(`python "model code.py" ${empId}`);
+        
+        if (stderr) {
+            console.error('Python error:', stderr);
+            return res.status(500).json({ error: 'Model execution failed' });
+        }
+
+        // Parse the Python output (you may need to adjust this based on your output format)
+        const result = {
+            riskScore: stdout.match(/Risk Score \(Probability of Failure\): ([\d.]+)%/)?.[1],
+            riskFactors: stdout.match(/🚩 Top Risk Factors:\n((?:   - .+\n)+)/)?.[1].split('\n').filter(f => f.trim()),
+            suggestions: stdout.match(/✅ Suggestions:\n((?:   ➤ .+\n)+)/)?.[1].split('\n').filter(f => f.trim())
+        };
+
+        res.json(result);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Also add this endpoint to get all employees (for the table)
+app.get('/employees', (req, res) => {
+    db.query('SELECT * FROM employee', (err, results) => {
+        if (err) {
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(results);
+    });
+});
+
 const port = 3000;
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
