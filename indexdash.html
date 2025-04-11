@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Details</title>
+  <link rel="stylesheet" href="styledash.css">
+</head>
+<body>
+  <div class="dashboard">
+    <h2 style = "margin-bottom: 4%; align-items: center;">Enter your information</h2>
+    <div id="employee-info"></div>
+    <div id="username-display" style="margin-top: 20px; font-size: 18px; font-weight: bold;"></div>
+
+    <div id="employee-info"></div> <!-- This will display the username -->
+
+    <div class="form-container">          
+      
+      <label for="emp-id">Employee ID:</label>
+      <input type="text" id="emp-id" required>
+
+      <label for="emp-name">Employee Name:</label>
+      <input type="text" id="emp-name" required>
+
+      <label for="emp-role">Role:</label>
+      <input type="text" id="emp-role" required>
+
+      <label for="emp-dept">Department:</label>
+      <input type="text" id="emp-dept" required>
+
+      <label for="emp-experience">Experience (years):</label>
+      <input type="number" id="emp-experience" min="0" required>
+
+      <label for="emp-tenure">Tenure at Company (years):</label>
+      <input type="number" id="emp-tenure" min="0" required>
+
+      <label for="emp-salary">Salary ($):</label>
+      <input type="number" id="emp-salary" required>
+
+      <label for="emp-job-satis">Job Satisfaction (1-10):</label>
+      <input type="number" id="emp-job-satis" min="1" max="10" required>
+
+      <label for="emp-avg-week-hrs">Average Weekly Hours:</label>
+      <input type="number" id="emp-avg-week-hrs" required>
+
+      <label for="emp-yrs-since-last-promo">Years Since Last Promotion:</label>
+      <input type="number" id="emp-yrs-since-last-promo" min="0" step="0.1" required>
+
+      <label for="emp-burn">Burnout Level (1-10):</label>
+      <input type="number" id="emp-burn" min="1" max="10" required>
+
+      <label for="emp-feedback">Feedback Score (1-10):</label>
+      <input type="number" id="emp-feedback" min="1" max="10" required>
+
+      <button onclick="nextPage()">Next</button>
+    </div>
+  </div>
+
+  <script src="scriptdash.js"></script>
+</body>
+</html>
