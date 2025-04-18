@@ -3,7 +3,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 
 # Load dataset
-df = pd.read_excel(r"C:\Users\arnav\Desktop\Arnav\Tech_Talent\Dummy_Employee_Data_325.xlsx")
+df = pd.read_excel(r"C:\Users\Param\Desktop\Hackathons\STARTUP\Dummy_Employee_Data_325.xlsx")
 
 # Map Burnout to binary
 df['Signs of Burnout'] = df['Signs of Burnout'].map({'No': 0, 'Yes': 1})
@@ -51,11 +51,20 @@ def risk_report(employee_id):
     emp_row = df[df['Employee ID'] == employee_id].iloc[0]
     features_row = emp_row[features]
     risk_score = model.predict_proba(features_row.to_frame().T)[0][1]
-
     
     print(f"\n📋 Risk Report for Employee ID: {employee_id}")
     print(f"🧠 Risk Score (Probability of Failure): {risk_score:.2%}")
+
+    # Classify risk level
+    if risk_score >= 0.7:
+        risk_level = "🔴 High Risk"
+    elif risk_score >= 0.4:
+        risk_level = "🟠 Moderate Risk"
+    else:
+        risk_level = "🟢 Low Risk"
+    print(f"📉 Classification: {risk_level}")
     
+    # Identify risk factors
     risk_factors = []
     if emp_row["Job Satisfaction (1 to 5)"] <= 2:
         risk_factors.append("Low job satisfaction")
@@ -74,20 +83,42 @@ def risk_report(employee_id):
     for factor in risk_factors[:3]:
         print(f"   - {factor}")
     
+    # Tailored suggestions
     print("✅ Suggestions:")
     for factor in risk_factors[:3]:
         if "job satisfaction" in factor:
-            print("   ➤ Improve team communication, align roles with interests.")
+            if risk_score >= 0.7:
+                print("   ➤ Immediate team counseling and project reassignment recommended.")
+            elif risk_score >= 0.4:
+                print("   ➤ Explore new project roles and give recognition.")
+            else:
+                print("   ➤ Encourage feedback and review current responsibilities.")
         elif "work hours" in factor:
-            print("   ➤ Rebalance workload, offer flexibility or support.")
+            if risk_score >= 0.7:
+                print("   ➤ Urgently rebalance workload and enforce work-hour limits.")
+            else:
+                print("   ➤ Monitor hours and encourage regular breaks.")
         elif "promotion" in factor:
-            print("   ➤ Offer growth opportunities or recognition.")
+            if risk_score >= 0.7:
+                print("   ➤ Initiate career development planning with HR.")
+            else:
+                print("   ➤ Offer mentoring and training opportunities.")
         elif "feedback" in factor:
-            print("   ➤ Provide regular feedback and coaching.")
+            if risk_score >= 0.7:
+                print("   ➤ Conduct 1-on-1 performance review and address concerns.")
+            else:
+                print("   ➤ Give more frequent feedback and coaching.")
         elif "burnout" in factor:
-            print("   ➤ Introduce wellness programs and breaks.")
+            if risk_score >= 0.7:
+                print("   ➤ Immediate intervention: mental health support and time off.")
+            else:
+                print("   ➤ Recommend wellness programs and flexible hours.")
         elif "salary" in factor:
-            print("   ➤ Consider salary reviews for parity.")
+            if risk_score >= 0.7:
+                print("   ➤ Discuss compensation gaps and conduct salary review.")
+            else:
+                print("   ➤ Evaluate parity and offer perks if needed.")
 
-a=input("Enter Employee ID")
+a=input("Enter Employee ID:")
+
 risk_report("EMP"+a) 
